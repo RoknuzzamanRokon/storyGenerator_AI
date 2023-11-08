@@ -64,7 +64,7 @@ def generate_story():
             user_result = (
                     "Create a dictionary.where key=1,value=string.string values is chapter. This are " + chapter +
                     " chapters heading for " + user_question + "." )
-            test_model_01 = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+            test_model_01 = openai.chat.completions.create(model="gpt-3.5-turbo",
                                                          messages=[{"role": "user",
                                                                     "content": user_result}]
                                                          )
@@ -81,7 +81,7 @@ def generate_story():
                         langauge_field_2 = "Write it to " + langauge + " langauge"
                         result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + langauge_field_2
                         print(result)
-                        test_model_02 = openai.ChatCompletion.create(
+                        test_model_02 = openai.chat.completions.create(
                             model="gpt-3.5-turbo",
                             messages=[{"role": "user", "content": result}]
                         )
