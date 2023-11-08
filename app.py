@@ -11,7 +11,7 @@ import pyttsx3
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///D:/Python/ofc/3rd_flask_for_chatBot/instance/story_gen.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aistorywritter'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 session = Session()
@@ -20,7 +20,7 @@ engine = pyttsx3.init()
 is_speaking = False
 
 
-EXPECTATION_WORDS = '100'
+EXPECTATION_WORDS = '1000'
 
 
 class Story(db.Model):
