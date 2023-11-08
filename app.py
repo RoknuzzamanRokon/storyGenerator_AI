@@ -3,7 +3,7 @@ import openai
 from flask_sqlalchemy import SQLAlchemy
 
 from sqlalchemy.orm import Session
-
+# from mysql import connector
 from datetime import datetime
 import os
 import pyttsx3
@@ -11,7 +11,8 @@ import pyttsx3
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aistorywritter'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aistorywritter'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost/storyGenText'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 session = Session()
