@@ -14,43 +14,54 @@
 
 <body>
 
-  <h1>List of Stories</h1>
+ 
 
 
-  {% for story in stories %}
-  <div class="container">
-    <div class="row row-cols-7 row-cols-lg-7 g-2 g-lg-3">
-      <div class="col">
-        <div class="p-3 border bg-light"><strong>Id: </strong> {{ story.id }}</div>
-      </div>
-      <div class="col">
-        <div class="p-3 border bg-light"><strong>Story Name:</strong> {{ story.story_name }}</div>
-      </div>
-      <div class="col">
-        <form method="POST" action="{{ url_for('update_file', story_id=story.id) }}">
-          <button type="submit" class="btn btn-outline-dark" name="update_file">Update File</button>
-        </form>
-      </div>
 
-      <div class="col">
-        <form method="POST" action="{{ url_for('delete_file', story_id=story.id) }}">
-          <input type="hidden" name="_method" value="DELETE">
-          <button type="submit" class="btn btn-outline-danger" name="delete_file">Delete File</button>
-        </form>
-      </div>
-
-      <div class="col">
-        <form method="GET" action="{{ url_for('view_file', story_id=story.id) }}">
-          <button type="submit" class="btn btn-outline-dark" name="view_file">View</button>
-        </form>
-      </div>
-      <div class="col">
-        <div class="p-3 border bg-light">{{story.content[14:100]}}</div>
-      </div>
-
-      {% endfor %}
-      <div>
-        <a href="{{ url_for('home') }}">Back to Home</a>
+  <div class="container py-4">
+    <div class="row">
+      <div class="card">
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Story Name</th>
+                <th scope="col">Content</th>
+                <th scope="col">Update</th>
+                <th scope="col">View</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for story in stories %}
+              <tr>
+                <th scope="row">{{ story.id }}</th>
+                <td>{{ story.story_name }}</td>
+                <td>
+                  {{story.content[14:100]}}
+                </td>
+                <td>
+                <form method="POST" action="{{ url_for('update_file', story_id=story.id) }}">
+                  <button type="submit" class="btn btn-outline-dark" name="update_file">Update File</button>
+                </form>
+                </td>
+                <td>
+                  <form method="GET" action="{{ url_for('view_file', story_id=story.id) }}">
+                    <button type="submit" class="btn btn-outline-dark" name="view_file">View</button>
+                  </form>
+                </td>
+                <td>
+                  <form method="POST" action="{{ url_for('delete_file', story_id=story.id) }}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-outline-danger" name="delete_file">Delete File</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
 
 </body>

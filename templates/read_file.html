@@ -70,10 +70,7 @@
 <body>
    <div class="form">
     <form>
-        <h1>Story generator</h1>
-        <label for="id-field">ID</label>
-        <input type="text" id="id-field" name="id-field" value="{{ story.id }}" readonly>
-
+        <input type="hidden" id="id-field" name="id-field" value="{{ story.id }}" readonly>
         <label for="text-field">Story Name</label>
         <input type="text" id="text-field" name="text-field" value="{{ story.story_name }}" readonly>
         <form method="POST">
