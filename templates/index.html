@@ -13,7 +13,7 @@
 
     <style>
         body {
-           
+
             font-family: Arial, sans-serif;
             display: flex;
             /* Use flexbox for layout */
@@ -128,7 +128,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="language-field" class="form-label">Category</label>
-                                            <select class="form-control" >
+                                            <select class="form-control">
                                                 <option value="Fiction">Fiction</option>
                                                 <option value="NON-Fiction">Non-Fiction</option>
                                                 <option value="Educational">Educational</option>
@@ -161,7 +161,9 @@
                 <div class="text_area">
                     <textarea rows="20" style="resize: vertical;" disabled>
                     {% if result %}
-                    {{ result }}
+                 <p style="font-family: 'Courier New', Courier, monospace;">
+                     {{ result }}
+                 </p>
                 {% endif %}
                 </textarea>
                 </div>
