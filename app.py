@@ -41,7 +41,7 @@ openai.api_key = API_KEY
 chapter_str = ""
 
 
-@app.route("/home")
+@app.route("/")
 def home():
     return render_template('index.html')
 
