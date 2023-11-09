@@ -141,11 +141,17 @@ def convert_to_mp3(story_id):
     session = db.session
     story = session.get(Story, story_id)
     if story:
+        folder_name = "Mp3"
+        absolute_folder_path = os.path.abspath(folder_name)
+        if not os.path.exists(absolute_folder_path):
+            os.makedirs(absolute_folder_path)
+
         engine = pyttsx3.init()
-        engine.save_to_file(story.content, f'{story.story_name}.mp3')
+        engine.save_to_file(story.content, os.path.join(absolute_folder_path, f'{story.story_name}.mp3'))
         engine.runAndWait()
 
-        return send_file(f'{story.story_name}.mp3', as_attachment=True)
+        file_path = os.path.join(absolute_folder_path, f'{story.story_name}.mp3' )
+        return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
 
     return "Story not found", 404
 
