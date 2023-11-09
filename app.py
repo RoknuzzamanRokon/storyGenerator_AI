@@ -9,7 +9,7 @@ import os
 import pyttsx3
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aistorywritter'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost/storyGenText'
@@ -205,22 +205,15 @@ def view_or_read_file(story_id):
         return render_template('story_not_found.html')
 
 
+@app.errorhandler(404)
+def not_found(e):
+    print(e)
+    return render_template('404.html'), 404
 
 
-
-# @app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
-# def view_or_read_file(story_id):
-#     story = Story.query.get(story_id)
-#     if story:
-#         if request.method == 'POST':
-#             engine = pyttsx3.init()
-#             engine.say(story.content)
-#             engine.runAndWait()
-#             return redirect(url_for('view_or_read_file', story_id=story_id))
-#         return render_template('view_file.html', story=story)
-#     else:
-#         return render_template('story_not_found.html')
-
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 #
 # @app.route('/update_list/<int:story_id>', methods=['GET', 'POST'])
