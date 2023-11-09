@@ -136,6 +136,20 @@ def view_file(story_id):
     return "Story not found."
 
 
+@app.route('/convert_to_mp3/<int:story_id>', methods=['GET','POST'])
+def convert_to_mp3(story_id):
+    session = db.session
+    story = session.get(Story, story_id)
+    if story:
+        engine = pyttsx3.init()
+        engine.save_to_file(story.content, f'{story.story_name}.mp3')
+        engine.runAndWait()
+
+        return send_file(f'{story.story_name}.mp3', as_attachment=True)
+
+    return "Story not found", 404
+
+
 @app.route('/delete_file/<int:story_id>', methods=['GET', 'POST'])
 def delete_file(story_id):
     if request.method == 'POST':
