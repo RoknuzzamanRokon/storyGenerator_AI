@@ -3,5 +3,5 @@ test.py
 .gitignore
 .idea
 
-
+pygame_test.py
 secret_key.txt
