@@ -100,14 +100,14 @@
 
             <!-- Add radio buttons for "cow" and "cat" choices -->
            <div class="form-check">
-            <input class="form-check-input" type="radio" name="voice_option" id="eleven_monolingual_v1" value="eleven_monolingual_v1">
+            <input class="form-check-input" type="radio" name="choice_model" id="eleven_monolingual_v1" value="eleven_monolingual_v1">
             <label class="form-check-label" for="eleven_monolingual_v1">
                 eleven_monolingual_v1
             </label>
             </div>
 
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="voice_option" id="eleven_multilingual_v1" value="eleven_multilingual_v1">
+                <input class="form-check-input" type="radio" name="choice_model" id="eleven_multilingual_v1" value="eleven_multilingual_v1">
                 <label class="form-check-label" for="eleven_multilingual_v1">
                     eleven_multilingual_v1
                 </label>
@@ -117,9 +117,10 @@
 
         </form>
 
-        <form method="POST" action="{{ url_for('download_mp3', story_id=story.id) }}">
-            <button type="submit" class="btn btn-outline-danger" name="download_mp3">Download mp3</button>
-        </form>
+     <form method="POST" action="{{ url_for('download_mp3', story_id=story.id) }}">
+    <button type="submit" class="btn btn-outline-danger" name="download_mp3">Download mp3</button>
+</form>
+
 
         <div class="text_area">
             <textarea rows="20" style="resize: vertical;">{{ story.content[10:150] }}</textarea>
