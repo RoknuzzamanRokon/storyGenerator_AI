@@ -223,61 +223,51 @@ def update_story_name(story_id):
 
 
 
+@app.route('/test_read_file/<int:story_id>', methods=['GET', 'POST'])
+def test_read_file(story_id):
+    global is_speaking  # Access the global variable
+    is_speaking = False
+    choice_voice = request.form.get('choice_voice')
+    choice_model = request.form.get('voice_option')
 
+    session = db.session
+    story = session.get(Story, story_id)
+    if story:
+        if 'listen_voice' in request.form:
+            audio = elevenlabs.generate(text=story.content[10:150],
+                                        voice=choice_voice,
+                                        model=choice_model)
+            elevenlabs.play(audio)
+
+
+        return render_template('view_test_file.html', story=story)
+    else:
+        return render_template('story_not_found.html')
 #
+# import pygame
 # @app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
 # def read_file(story_id):
-#     global is_speaking  # Access the global variable
-#     is_speaking = False
 #     session = db.session
 #     story = session.get(Story, story_id)
+#
+#     pygame.init()
+#     pygame.mixer.init()
 #     if story:
 #         if request.method == 'POST':
-#             if 'read_file' in request.form:
-#                 # Start text-to-speech
-#                 # if not is_speaking:
-#                     # engine.say(story.content)
-#                     # engine.runAndWait()
-#
-#                 audio = elevenlabs.generate(text=story.content,voice='Bella')
-#                 elevenlabs.play(audio)
-#
-#                     # is_speaking = True
-#             elif 'stop_content' in request.form:
-#                 audio = elevenlabs.generate(text=' ', voice='Bella')
-#                 elevenlabs.play(audio)
-#                 # Stop text-to-speech
-#                 # if is_speaking:
-#                 #     engine.stop()
-#                 #     is_speaking = False
+#             pygame.mixer.music.load('new.mp3')
+#             while True:
+#                 if 'read_file' in request.form:
+#                     pygame.mixer.music.play()
+#                 elif 'pause_file' in request.form:
+#                     pygame.mixer.music.pause()
+#                 elif 'resume_file' in request.form:
+#                     pygame.mixer.music.unpause()
+#                 elif 'stop_file' in request.form:
+#                     pygame.mixer.music.stop()
+#                     break
 #         return render_template('view_file.html', story=story)
 #     else:
 #         return render_template('story_not_found.html')
-
-import pygame
-@app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
-def read_file(story_id):
-    session = db.session
-    story = session.get(Story, story_id)
-
-    pygame.init()
-    pygame.mixer.init()
-    if story:
-        if request.method == 'POST':
-            pygame.mixer.music.load('new.mp3')
-            while True:
-                if 'read_file' in request.form:
-                    pygame.mixer.music.play()
-                elif 'pause_file' in request.form:
-                    pygame.mixer.music.pause()
-                elif 'resume_file' in request.form:
-                    pygame.mixer.music.unpause()
-                elif 'stop_file' in request.form:
-                    pygame.mixer.music.stop()
-                    break
-        return render_template('view_file.html', story=story)
-    else:
-        return render_template('story_not_found.html')
 
 
 @app.errorhandler(404)
