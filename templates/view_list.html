@@ -59,10 +59,10 @@
                 </td>
 
                 <td>
-                  <form method="POST" action="{{ url_for('convert_to_mp3', story_id=story.id) }}">
+                  <form method="POST" action="{{ url_for('download_mp3', story_id=story.id) }}">
                   <button type="submit" class="btn btn-outline-danger" name="download_mp3">Download mp3</button>
                   </form>
-<!--                  <a href="{{ url_for('convert_to_mp3', story_id=story.id) }}" class="btn btn-outline-danger" download>Download mp3</a>-->
+<!--                  <a href="{{ url_for('download_mp3', story_id=story.id) }}" class="btn btn-outline-danger" download>Download mp3</a>-->
                 </td>
 
               </tr>

@@ -6,7 +6,11 @@ from sqlalchemy.orm import Session
 # from mysql import connector
 from datetime import datetime
 import os
+
+
 import pyttsx3
+import elevenlabs
+
 
 
 app = Flask(__name__, template_folder='templates')
@@ -37,6 +41,9 @@ class Story(db.Model):
 
 API_KEY = open("secret_key.txt", "r").read()
 openai.api_key = API_KEY
+
+API_key = open('elevenLabs_key.txt', 'r').read()
+elevenlabs.set_api_key(API_key)
 
 # Initialize chapter_str as an empty string
 chapter_str = ""
@@ -136,8 +143,8 @@ def view_file(story_id):
     return "Story not found."
 
 
-@app.route('/convert_to_mp3/<int:story_id>', methods=['GET','POST'])
-def convert_to_mp3(story_id):
+@app.route('/download_mp3/<int:story_id>', methods=['GET','POST'])
+def download_mp3(story_id):
     session = db.session
     story = session.get(Story, story_id)
     if story:
@@ -146,12 +153,25 @@ def convert_to_mp3(story_id):
         if not os.path.exists(absolute_folder_path):
             os.makedirs(absolute_folder_path)
 
-        engine = pyttsx3.init()
-        engine.save_to_file(story.content, os.path.join(absolute_folder_path, f'{story.story_name}.mp3'))
-        engine.runAndWait()
+        audio = elevenlabs.generate(
+            text=story.content,
+            voice='Bella'
+        )
 
-        file_path = os.path.join(absolute_folder_path, f'{story.story_name}.mp3' )
-        return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
+        if not os.path.exists(f'{story.story_name}.mp3'):
+            elevenlabs.save(audio, os.path.join(absolute_folder_path,f'{story.story_name}.mp3'))
+            file_path = os.path.join(absolute_folder_path,f'{story.story_name}.mp3')
+            return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
+        else:
+            print('This file already downloaded.')
+
+          # This section for Pyttsx.
+        # engine = pyttsx3.init()
+        # engine.save_to_file(story.content, os.path.join(absolute_folder_path, f'{story.story_name}.mp3'))
+        # engine.runAndWait()
+        #
+        # file_path = os.path.join(absolute_folder_path, f'{story.story_name}.mp3' )
+        # return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
 
     return "Story not found", 404
 
@@ -170,6 +190,7 @@ def delete_file(story_id):
 
     # Handle GET requests for displaying the form or other actions here
     return "GET request for deleting a file"
+
 
 @app.route('/update_file/<int:story_id>', methods=['POST','GET'])
 def update_file(story_id):
@@ -211,15 +232,21 @@ def view_or_read_file(story_id):
         if request.method == 'POST':
             if 'read_file' in request.form:
                 # Start text-to-speech
-                if not is_speaking:
-                    engine.say(story.content)
-                    engine.runAndWait()
-                    is_speaking = True
+                # if not is_speaking:
+                    # engine.say(story.content)
+                    # engine.runAndWait()
+
+                audio = elevenlabs.generate(text=story.content,voice='Bella')
+                elevenlabs.play(audio)
+
+                    # is_speaking = True
             elif 'stop_content' in request.form:
+                audio = elevenlabs.generate(text=' ', voice='Bella')
+                elevenlabs.play(audio)
                 # Stop text-to-speech
-                if is_speaking:
-                    engine.stop()
-                    is_speaking = False
+                # if is_speaking:
+                #     engine.stop()
+                #     is_speaking = False
         return render_template('view_file.html', story=story)
     else:
         return render_template('story_not_found.html')
