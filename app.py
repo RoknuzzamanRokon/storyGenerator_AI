@@ -84,7 +84,7 @@ def generate_story():
                     print(chapter_explanations)
                     for i in range(1, len(dictionary) + 1):
                         per_chapter = dictionary[i]
-                        chapter_explanations.append(f"chapter-{i}>>>>>{per_chapter} \n")
+                        chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
                         langauge_field_2 = "Write it to " + langauge + " langauge"
                         result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + langauge_field_2
                         print(result)

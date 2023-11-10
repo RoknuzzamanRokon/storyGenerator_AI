@@ -39,7 +39,7 @@
                 <th scope="row">{{ story.id }}</th>
                 <td>{{ story.story_name }}</td>
                 <td>
-                  {{story.content[14:100]}}
+                  {{story.content[10:100]}}
                 </td>
                 <td>
                 <form method="POST" action="{{ url_for('update_file', story_id=story.id) }}">
