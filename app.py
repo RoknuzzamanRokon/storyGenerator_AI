@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file, make_response,redirect,url_for
 import openai
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_migrate import Migrate
 from sqlalchemy.orm import Session
 # from mysql import connector
 from datetime import datetime
@@ -19,13 +19,14 @@ app = Flask(__name__, template_folder='templates')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost/storyGenText'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+migrate = Migrate(app, db=db)
 session = Session()
 
 engine = pyttsx3.init()
 is_speaking = False
 
 
-EXPECTATION_WORDS = '1000'
+EXPECTATION_WORDS = '50'
 
 
 class Story(db.Model):
@@ -34,6 +35,9 @@ class Story(db.Model):
     file = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     content = db.Column(db.Text)
+    age = db.Column(db.Integer)
+    language = db.Column(db.String(50))
+    mp3_file = db.Column(db.LargeBinary)
 
     def __repr__(self) -> str:
         return f'{self.id}-{self.story_name}'
@@ -142,6 +146,14 @@ def view_file(story_id):
         return render_template('view_file.html', story=story)
     return "Story not found."
 
+@app.route('/view_test_file/<int:story_id>', methods=['GET'])
+def view_test_file(story_id):
+    session = db.session
+    story = session.get(Story, story_id)
+    if story:
+        return render_template('view_test_file.html', story=story)
+    return "Story not found."
+
 
 @app.route('/download_mp3/<int:story_id>', methods=['GET','POST'])
 def download_mp3(story_id):
@@ -157,21 +169,12 @@ def download_mp3(story_id):
             text=story.content,
             voice='Bella'
         )
-
         if not os.path.exists(f'{story.story_name}.mp3'):
-            elevenlabs.save(audio, os.path.join(absolute_folder_path,f'{story.story_name}.mp3'))
-            file_path = os.path.join(absolute_folder_path,f'{story.story_name}.mp3')
+            elevenlabs.save(audio, os.path.join(absolute_folder_path,f'{story.story_name}_{story.id}.mp3'))
+            file_path = os.path.join(absolute_folder_path,f'{story.story_name}_{story.id}.mp3')
             return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
         else:
             print('This file already downloaded.')
-
-          # This section for Pyttsx.
-        # engine = pyttsx3.init()
-        # engine.save_to_file(story.content, os.path.join(absolute_folder_path, f'{story.story_name}.mp3'))
-        # engine.runAndWait()
-        #
-        # file_path = os.path.join(absolute_folder_path, f'{story.story_name}.mp3' )
-        # return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
 
     return "Story not found", 404
 
@@ -221,32 +224,57 @@ def update_story_name(story_id):
 
 
 
+#
+# @app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
+# def read_file(story_id):
+#     global is_speaking  # Access the global variable
+#     is_speaking = False
+#     session = db.session
+#     story = session.get(Story, story_id)
+#     if story:
+#         if request.method == 'POST':
+#             if 'read_file' in request.form:
+#                 # Start text-to-speech
+#                 # if not is_speaking:
+#                     # engine.say(story.content)
+#                     # engine.runAndWait()
+#
+#                 audio = elevenlabs.generate(text=story.content,voice='Bella')
+#                 elevenlabs.play(audio)
+#
+#                     # is_speaking = True
+#             elif 'stop_content' in request.form:
+#                 audio = elevenlabs.generate(text=' ', voice='Bella')
+#                 elevenlabs.play(audio)
+#                 # Stop text-to-speech
+#                 # if is_speaking:
+#                 #     engine.stop()
+#                 #     is_speaking = False
+#         return render_template('view_file.html', story=story)
+#     else:
+#         return render_template('story_not_found.html')
 
+import pygame
 @app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
-def view_or_read_file(story_id):
-    global is_speaking  # Access the global variable
-    is_speaking = False
+def read_file(story_id):
     session = db.session
     story = session.get(Story, story_id)
+
+    pygame.init()
+    pygame.mixer.init()
     if story:
         if request.method == 'POST':
-            if 'read_file' in request.form:
-                # Start text-to-speech
-                # if not is_speaking:
-                    # engine.say(story.content)
-                    # engine.runAndWait()
-
-                audio = elevenlabs.generate(text=story.content,voice='Bella')
-                elevenlabs.play(audio)
-
-                    # is_speaking = True
-            elif 'stop_content' in request.form:
-                audio = elevenlabs.generate(text=' ', voice='Bella')
-                elevenlabs.play(audio)
-                # Stop text-to-speech
-                # if is_speaking:
-                #     engine.stop()
-                #     is_speaking = False
+            pygame.mixer.music.load('new.mp3')
+            while True:
+                if 'read_file' in request.form:
+                    pygame.mixer.music.play()
+                elif 'pause_file' in request.form:
+                    pygame.mixer.music.pause()
+                elif 'resume_file' in request.form:
+                    pygame.mixer.music.unpause()
+                elif 'stop_file' in request.form:
+                    pygame.mixer.music.stop()
+                    break
         return render_template('view_file.html', story=story)
     else:
         return render_template('story_not_found.html')

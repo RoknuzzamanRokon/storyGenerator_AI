@@ -85,20 +85,20 @@
 
 <body>
     <div class="form">
-
+            <h1>This is Voice generator test page and download it..</h1>
         <form id="story_form_{{ story.id }}" method="POST"
             action="{{ url_for('read_file', story_id=story.id) }}">
 
-            <input type="hidden" id="id-field" name="id-field" value="{{ story.id }}" readonly>
-
-            <label for="text-field">Story Name</label>
-            <input type="text" id="text-field" name="text-field" value="{{ story.story_name }}">
-
-            <button type="submit" class="btn btn-outline-dark" name="read_file">Read Content</button>
-            <button type="submit" class="btn btn-outline-dark" name="pause_file">Posses Content</button>
-            <button type="submit" class="btn btn-outline-dark" name="resume_file">Resume Content</button>
-
-            <button type="submit" class="btn btn-outline-dark" name="stop_content">Stop Content</button>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="voice-field" class="form-label">Choice Voice</label>
+                    <select class="form-control">
+                        <option value="Fiction">Fiction</option>
+                        <option value="NON-Fiction">Non-Fiction</option>
+                        <option value="Educational">Educational</option>
+                    </select>
+                </div>
+            </div>
 
         </form>
 
@@ -108,33 +108,10 @@
         </form>
 
         <div class="text_area">
-            <textarea rows="20" style="resize: vertical;">{{ story.content }}</textarea>
+            <textarea rows="20" style="resize: vertical;">{{ story.content[10:150] }}</textarea>
         </div>
 
     </div>
-
-
-
-
-
-    <!--<script>-->
-    <!--    -->
-    <!--        document.addEventListener('DOMContentLoaded', function () {-->
-    <!--            // Find all the stop buttons by class name-->
-    <!--            var stopButtons = document.querySelectorAll('.stop-button');-->
-
-    <!--            // Add a click event listener to each stop button-->
-    <!--            stopButtons.forEach(function (button) {-->
-    <!--            -->
-    <!--                button.addEventListener('click', function () {-->
-    <!--                    var storyId = this.getAttribute('data-story-id');-->
-    <!--                    var formId = 'story_form_' + storyId;-->
-    <!--                    var form = document.getElementById(formId);-->
-    <!--                    form.submit();  // Submit the form to stop the content-->
-    <!--                });-->
-    <!--            });-->
-    <!--        });-->
-    <!--</script>-->
 
 </body>
 
