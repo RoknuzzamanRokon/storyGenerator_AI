@@ -3,10 +3,18 @@ test.py
 .gitignore
 .idea
 
+pygame_test.py
+secret_key.txt
 
+<<<<<<< HEAD
 secret_key.txt
 
 elevenLabs_key.txt
 secret_key.txt
 pygame_test.py
 elevenLabs.py
+=======
+Mp3
+elevenLabs.py
+elevenLabs_key.txt
+>>>>>>> rokon01

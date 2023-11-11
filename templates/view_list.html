@@ -39,7 +39,7 @@
                 <th scope="row">{{ story.id }}</th>
                 <td>{{ story.story_name }}</td>
                 <td>
-                  {{story.content[14:100]}}
+                  {{story.content[10:150]}}
                 </td>
                 <td>
                 <form method="POST" action="{{ url_for('update_file', story_id=story.id) }}">
@@ -47,8 +47,8 @@
                 </form>
                 </td>
                 <td>
-                  <form method="GET" action="{{ url_for('view_file', story_id=story.id) }}">
-                    <button type="submit" class="btn btn-outline-dark" name="view_file">View</button>
+                  <form method="GET" action="{{ url_for('view_test_file', story_id=story.id) }}">
+                    <button type="submit" class="btn btn-outline-dark" name="view_test_file">View</button>
                   </form>
                 </td>
                 <td>
@@ -58,12 +58,6 @@
                   </form>
                 </td>
 
-                <td>
-                  <form method="POST" action="{{ url_for('convert_to_mp3', story_id=story.id) }}">
-                  <button type="submit" class="btn btn-outline-danger" name="download_mp3">Download mp3</button>
-                  </form>
-<!--                  <a href="{{ url_for('convert_to_mp3', story_id=story.id) }}" class="btn btn-outline-danger" download>Download mp3</a>-->
-                </td>
 
               </tr>
               {% endfor %}
