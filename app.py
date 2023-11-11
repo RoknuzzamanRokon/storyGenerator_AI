@@ -138,22 +138,21 @@ def view_list():
     return render_template('view_list.html', stories=stories)
 
 
-@app.route('/view_file/<int:story_id>', methods=['GET'])
-def view_file(story_id):
-    session = db.session
-    story = session.get(Story, story_id)
-    if story:
-        return render_template('view_file.html', story=story)
-    return "Story not found."
+# @app.route('/view_file/<int:story_id>', methods=['GET'])
+# def view_file(story_id):
+#     session = db.session
+#     story = session.get(Story, story_id)
+#     if story:
+#         return render_template('view_file.html', story=story)
+#     return "Story not found."
 
 @app.route('/view_test_file/<int:story_id>', methods=['GET'])
 def view_test_file(story_id):
     session = db.session
     story = session.get(Story, story_id)
     if story:
-        return render_template('view_test_file.html', story=story)
+        return render_template('read_and_download.html', story=story)
     return "Story not found."
-
 
 
 @app.route('/delete_file/<int:story_id>', methods=['GET', 'POST'])
@@ -198,15 +197,12 @@ def update_story_name(story_id):
     return "Invalid update request"
 
 
-
-@app.route('/test_read_file/<int:story_id>', methods=['GET', 'POST'])
-def test_read_file(story_id):
+@app.route('/read_and_download/<int:story_id>', methods=['GET', 'POST'])
+def read_and_download(story_id):
     global is_speaking  # Access the global variable
     is_speaking = False
     choice_voice = request.form.get('choice_voice')
     choice_model = request.form.get('choice_model')
-
-
     session = db.session
     story = session.get(Story, story_id)
     if story:
@@ -215,25 +211,9 @@ def test_read_file(story_id):
                                         voice=choice_voice,
                                         model=choice_model)
             elevenlabs.play(audio)
+            return render_template('read_and_download.html', story=story)
 
-
-        return render_template('view_test_file.html', story=story)
-    else:
-        return render_template('story_not_found.html')
-
-
-@app.route('/download_mp3/<int:story_id>', methods=['GET', 'POST'])
-def download_mp3(story_id):
-    session = db.session
-    story = session.get(Story, story_id)
-
-    if story:
-        if request.method == 'POST':
-            # choice_voice = request.form.get('choice_voice')
-            # choice_model = request.form.get('choice_model')
-            # print("Choice Voice:", choice_voice)
-            # print("Choice Model:", choice_model)
-
+        elif 'download_mp3' in request.form:
             folder_name = "Mp3"
             absolute_folder_path = os.path.abspath(folder_name)
 
@@ -254,8 +234,46 @@ def download_mp3(story_id):
                 print('This file already downloaded.')
 
         return "Invalid request method"
+    else:
+        return render_template('story_not_found.html')
 
-    return "Story not found", 404
+
+# @app.route('/download_mp3/<int:story_id>', methods=['GET', 'POST'])
+# def download_mp3(story_id):
+#     session = db.session
+#     story = session.get(Story, story_id)
+#
+#     choice_voice = request.form.get('choice_voice')
+#     choice_model = request.form.get('choice_model')
+#     if story:
+#         if request.method == 'POST':
+#             # choice_voice = request.form.get('choice_voice')
+#             # choice_model = request.form.get('choice_model')
+#             # print("Choice Voice:", choice_voice)
+#             # print("Choice Model:", choice_model)
+#
+#             folder_name = "Mp3"
+#             absolute_folder_path = os.path.abspath(folder_name)
+#
+#             if not os.path.exists(absolute_folder_path):
+#                 os.makedirs(absolute_folder_path)
+#
+#             audio = elevenlabs.generate(
+#                 text=story.content,
+#                 voice=choice_voice,
+#                 model=choice_model
+#             )
+#
+#             if not os.path.exists(f'{story.story_name}.mp3'):
+#                 elevenlabs.save(audio, os.path.join(absolute_folder_path, f'{story.story_name}_{story.id}.mp3'))
+#                 file_path = os.path.join(absolute_folder_path, f'{story.story_name}_{story.id}.mp3')
+#                 return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
+#             else:
+#                 print('This file already downloaded.')
+#
+#         return "Invalid request method"
+#
+#     return "Story not found", 404
 
 
 
@@ -295,24 +313,6 @@ def not_found(e):
 def internal_server_error(e):
     return render_template('500.html'), 500
 
-#
-# @app.route('/update_list/<int:story_id>', methods=['GET', 'POST'])
-# def update_story(story_id):
-#     story = Story.query.get(story_id)
-#     if story:
-#         if request.method == 'POST':
-#             new_content = request.form.get('new_content')
-#             if new_content:
-#                 story.content = new_content
-#                 db.session.commit()
-#
-#             else:
-#                 return "Its Empty"
-#         return render_template('update_story.html', story=story)
-#     return "Story not found"
-#
-#
-#
 
 if __name__ == "__main__":
     app.run(debug=True)

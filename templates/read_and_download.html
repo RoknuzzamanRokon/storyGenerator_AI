@@ -87,8 +87,8 @@
     <div class="form">
         <h1>This is Voice generator test page and download it.</h1>
 
-        <form id="story_form_{{ story.id }}" method="POST" action="{{ url_for('test_read_file', story_id=story.id) }}">
-            <label for="voice-field" class="form-label">Choice Voice</label>
+        <form id="story_form_{{ story.id }}" method="POST" action="{{ url_for('read_and_download', story_id=story.id) }}">
+            <label for="choice_voice" class="form-label">Choice Voice</label>
             <select class="form-control" name="choice_voice">
                 <option value="Adam">Adam</option>
                 <option value="Antoni">Antoni</option>
@@ -98,7 +98,6 @@
                 <option value="Daniel">Daniel</option>
             </select>
 
-            <!-- Add radio buttons for "cow" and "cat" choices -->
            <div class="form-check">
             <input class="form-check-input" type="radio" name="choice_model" id="eleven_monolingual_v1" value="eleven_monolingual_v1">
             <label class="form-check-label" for="eleven_monolingual_v1">
@@ -112,18 +111,18 @@
                     eleven_multilingual_v1
                 </label>
             </div>
-        <button type="submit" class="btn btn-outline-danger" name="listen_voice">Listen voice</button>
-            <!-- Add the rest of your form content -->
+            <button type="submit" class="btn btn-outline-danger" name="listen_voice">Test voice</button>
+            <button type="submit" class="btn btn-outline-danger" name="download_mp3">Download mp3</button>
 
         </form>
 
-     <form method="POST" action="{{ url_for('download_mp3', story_id=story.id) }}">
-    <button type="submit" class="btn btn-outline-danger" name="download_mp3">Download mp3</button>
-</form>
+<!--     <form method="POST" action="{{ url_for('read_and_download', story_id=story.id) }}">-->
+<!--    <button type="submit" class="btn btn-outline-danger" name="download_mp3">Download mp3</button>-->
+<!--</form>-->
 
 
         <div class="text_area">
-            <textarea rows="20" style="resize: vertical;">{{ story.content[10:150] }}</textarea>
+            <textarea rows="20" style="resize: vertical;">{{ story.content }}</textarea>
         </div>
     </div>
 
