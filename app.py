@@ -1,17 +1,12 @@
-from flask import Flask, render_template, request, send_file, make_response,redirect,url_for
-import openai
+from flask import Flask, render_template, request, send_file, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.orm import Session
 # from mysql import connector
 from datetime import datetime
+import openai
 import os
-
-
-import pyttsx3
 import elevenlabs
-
-
 
 app = Flask(__name__, template_folder='templates')
 
@@ -22,11 +17,9 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db=db)
 session = Session()
 
-engine = pyttsx3.init()
 is_speaking = False
 
-
-EXPECTATION_WORDS = '50'
+EXPECTATION_WORDS = '999'
 
 
 class Story(db.Model):
@@ -78,7 +71,7 @@ def generate_story():
             test_model_01 = openai.chat.completions.create(model="gpt-3.5-turbo",
                                                          messages=[{"role": "user",
                                                                     "content": user_result}]
-                                                         )
+                                                           )
             result_of_title = test_model_01.choices[0].message.content
             print(result_of_title)
             try:
@@ -93,7 +86,7 @@ def generate_story():
                         result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + langauge_field_2
                         print(result)
                         test_model_02 = openai.chat.completions.create(
-                            model="gpt-3.5-turbo",
+                            model="gpt-4",
                             messages=[{"role": "user", "content": result}]
                         )
                         gpt_result = test_model_02.choices[0].message.content
@@ -238,45 +231,6 @@ def read_and_download(story_id):
         return render_template('story_not_found.html')
 
 
-# @app.route('/download_mp3/<int:story_id>', methods=['GET', 'POST'])
-# def download_mp3(story_id):
-#     session = db.session
-#     story = session.get(Story, story_id)
-#
-#     choice_voice = request.form.get('choice_voice')
-#     choice_model = request.form.get('choice_model')
-#     if story:
-#         if request.method == 'POST':
-#             # choice_voice = request.form.get('choice_voice')
-#             # choice_model = request.form.get('choice_model')
-#             # print("Choice Voice:", choice_voice)
-#             # print("Choice Model:", choice_model)
-#
-#             folder_name = "Mp3"
-#             absolute_folder_path = os.path.abspath(folder_name)
-#
-#             if not os.path.exists(absolute_folder_path):
-#                 os.makedirs(absolute_folder_path)
-#
-#             audio = elevenlabs.generate(
-#                 text=story.content,
-#                 voice=choice_voice,
-#                 model=choice_model
-#             )
-#
-#             if not os.path.exists(f'{story.story_name}.mp3'):
-#                 elevenlabs.save(audio, os.path.join(absolute_folder_path, f'{story.story_name}_{story.id}.mp3'))
-#                 file_path = os.path.join(absolute_folder_path, f'{story.story_name}_{story.id}.mp3')
-#                 return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
-#             else:
-#                 print('This file already downloaded.')
-#
-#         return "Invalid request method"
-#
-#     return "Story not found", 404
-
-
-
 # import pygame
 # @app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
 # def read_file(story_id):
@@ -303,6 +257,7 @@ def read_and_download(story_id):
 #         return render_template('story_not_found.html')
 
 
+# Error handling section.
 @app.errorhandler(404)
 def not_found(e):
     print(e)
