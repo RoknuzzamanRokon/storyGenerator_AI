@@ -144,7 +144,10 @@ def view_test_file(story_id):
     session = db.session
     story = session.get(Story, story_id)
     if story:
-        return render_template('read_and_download.html', story=story)
+        if not os.path.exists(f'{story.story_name}.mp3'):
+            return render_template('read_and_download.html', story=story)
+        else:
+            return render_template('read_content_file.html', story=story)
     return "Story not found."
 
 
