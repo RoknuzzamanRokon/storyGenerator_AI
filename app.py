@@ -110,16 +110,16 @@ def generate_story():
                 if not os.path.exists(folder_name):
                     os.makedirs(folder_name)
 
-                file_path = os.path.join(folder_name, f'{input_story_name} story.txt')
+                file_path = os.path.join(folder_name, f'{input_story_name}_story.txt')
                 with open(file_path, 'w') as file:
                     file.write(chapter_str)
 
-                story = Story(story_name=input_story_name, file=f'{input_story_name} story', content=chapter_str)
+                story = Story(story_name=input_story_name, file=f'{input_story_name}_story', content=chapter_str)
                 db.session.add(story)
                 db.session.commit()
 
                 # send_file(file_path, as_attachment=True)
-                return render_template('generate.html', result=chapter_str)
+                return render_template('voiceTest_and_download.html', story=story)
             else:
                 return 'Content not available'
     return render_template('index.html')
@@ -148,7 +148,7 @@ def view_test_file(story_id):
         if os.path.exists(file_path):
             return render_template('read_content_file.html', story=story)
         else:
-            return render_template('read_and_download.html', story=story)
+            return render_template('voiceTest_and_download.html', story=story)
     return "Story not found."
 
 
@@ -194,8 +194,8 @@ def update_story_name(story_id):
     return "Invalid update request"
 
 
-@app.route('/read_and_download/<int:story_id>', methods=['GET', 'POST'])
-def read_and_download(story_id):
+@app.route('/voiceTest_and_download/<int:story_id>', methods=['GET', 'POST'])
+def voiceTest_and_download(story_id):
     global is_speaking  # Access the global variable
     is_speaking = False
     choice_voice = request.form.get('choice_voice')
@@ -208,7 +208,7 @@ def read_and_download(story_id):
                                         voice=choice_voice,
                                         model=choice_model)
             elevenlabs.play(audio)
-            return render_template('read_and_download.html', story=story)
+            return render_template('voiceTest_and_download.html', story=story)
 
         elif 'download_mp3' in request.form:
             folder_name = "Mp3"
