@@ -144,10 +144,11 @@ def view_test_file(story_id):
     session = db.session
     story = session.get(Story, story_id)
     if story:
-        if not os.path.exists(f'{story.story_name}.mp3'):
-            return render_template('read_and_download.html', story=story)
-        else:
+        file_path = os.path.join("Mp3" , f"{story.story_name}_{story.id}.mp3")
+        if os.path.exists(file_path):
             return render_template('read_content_file.html', story=story)
+        else:
+            return render_template('read_and_download.html', story=story)
     return "Story not found."
 
 
@@ -225,7 +226,8 @@ def read_and_download(story_id):
             if not os.path.exists(f'{story.story_name}.mp3'):
                 elevenlabs.save(audio, os.path.join(absolute_folder_path, f'{story.story_name}_{story.id}.mp3'))
                 file_path = os.path.join(absolute_folder_path, f'{story.story_name}_{story.id}.mp3')
-                return send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
+                send_file(file_path, as_attachment=True, mimetype='audio/mpeg')
+                return render_template('read_content_file.html', story=story)
             else:
                 print('This file already downloaded.')
 
