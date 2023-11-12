@@ -3,6 +3,7 @@ test.py
 .gitignore
 .idea
 
+.eve
 pygame_test.py
 secret_key.txt
 
