@@ -35,12 +35,14 @@ class Story(db.Model):
     def __repr__(self) -> str:
         return f'{self.id}-{self.story_name}'
 
+API_KEY_1 = os.environ['secret_key']
 
-API_KEY = open("secret_key.txt", "r").read()
-openai.api_key = API_KEY
+# API_KEY = open("secret_key.txt", "r").read()
+openai.api_key = API_KEY_1
 
-API_key = open('elevenLabs_key.txt', 'r').read()
-elevenlabs.set_api_key(API_key)
+API_KEY_2 = os.environ['elevenLabs_key']
+# API_key = open('elevenLabs_key.txt', 'r').read()
+elevenlabs.set_api_key(API_KEY_2)
 
 # Initialize chapter_str as an empty string
 chapter_str = ""
