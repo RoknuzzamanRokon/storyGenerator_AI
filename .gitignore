@@ -2,7 +2,7 @@
 test.py
 .gitignore
 .idea
-
+venv/
 .env
 pygame_test.py
 secret_key.txt
