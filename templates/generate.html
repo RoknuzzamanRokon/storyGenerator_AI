@@ -87,7 +87,14 @@
                 <div class="form">
                     <form method="POST" action="/generate">
                         <label for="input-story-name">Story name</label>
-                        <input type="text" id="input-story-name" name="input-story-name">
+                        <input type="text" id="input-story-name" name="input-story-name" value="{{ user_question }}" readonly>
+
+                        <label for="user-age">Your age</label>
+                        <input type="text" id="user-age" name="user-age" value="{{ age }}" readonly>
+
+                        <label for="select-language">Select Language</label>
+                        <input type="text" id="select-language" name="select-language" value="{{ language }}" readonly>
+
                         <button type="submit" class="btn btn-outline-dark" name="save_btn">save</button>
                     </form>
                     <div>

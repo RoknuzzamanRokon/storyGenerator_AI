@@ -63,9 +63,9 @@ def generate_story():
             user_question = request.form.get('text-field')
             age = request.form.get('age-field')
             chapter = request.form.get('chapter-field')
-            langauge = request.form.get('language-field')
+            language = request.form.get('language-field')
 
-            langauge_field = "Generate it to " + langauge + " langauge."
+            language_field = "Generate it to " + language + " langauge."
             user_result = (
                     "Create a dictionary.where key=1,value=string.string values is chapter. This are " + chapter +
                     " chapters heading for " + user_question + "." )
@@ -83,8 +83,8 @@ def generate_story():
                     for i in range(1, len(dictionary) + 1):
                         per_chapter = dictionary[i]
                         chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
-                        langauge_field_2 = "Write it to " + langauge + " langauge"
-                        result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + langauge_field_2
+                        language_field_2 = "Write it to " + language + " langauge"
+                        result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + language_field_2
                         print(result)
                         test_model_02 = openai.chat.completions.create(
                             model="gpt-4",
@@ -95,7 +95,8 @@ def generate_story():
                         chapter_explanations.append(f"{gpt_result}\n\n\n")
                     chapter_str = "\n".join(chapter_explanations)
 
-                    return render_template('generate.html', result=chapter_str, user_question=user_question)
+                    return render_template('generate.html', result=chapter_str,
+                                           user_question=user_question, age=age, language=language)
                 else:
                     print("The string does not represent a valid dictionary.")
                     print("Search Again.")
@@ -105,8 +106,10 @@ def generate_story():
 
         elif 'save_btn' in request.form:
             if chapter_str:
-
                 input_story_name = request.form.get('input-story-name')
+                age = request.form.get('user-age')
+                language = request.form.get('select-language')
+
                 folder_name = 'Collection'
                 if not os.path.exists(folder_name):
                     os.makedirs(folder_name)
@@ -115,7 +118,8 @@ def generate_story():
                 with open(file_path, 'w') as file:
                     file.write(chapter_str)
 
-                story = Story(story_name=input_story_name, file=f'{input_story_name}_story', content=chapter_str)
+                story = Story(story_name=input_story_name, file=f'{input_story_name}_story', content=chapter_str,
+                              age=age, language=language)
                 db.session.add(story)
                 db.session.commit()
 
@@ -261,6 +265,7 @@ def read_file(story_id):
         return render_template('read_content_file.html', story=story)
     else:
         return render_template('story_not_found.html')
+
 
 # Error handling section.
 @app.errorhandler(404)
