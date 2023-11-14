@@ -84,7 +84,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <div class="form">
+                
                     <form method="POST" action="/generate">
                         <label for="input-story-name">Story name</label>
                         <input type="text" id="input-story-name" name="input-story-name">
@@ -95,17 +95,17 @@
                             <button type="submit" class="btn btn-outline-dark" name="View_list">View List</button>
                         </form>
                     </div>
-                </div>
+                
             </div>
 
             <div class="col-md-8">
-                <div class="text_area">
-                    <textarea rows="20" style="resize: vertical;">
+              
+                    <textarea>
                         {% if result %}
                   {{ result }}    
                     {% endif %}
                     </textarea>
-                </div>
+               
 
             </div>
         </div>
