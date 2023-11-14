@@ -68,24 +68,22 @@
     </style>
 </head>
 <body>
-   <div class="form">
-    <form>
+ <div class="form">
+    <form method="POST" action="{{ url_for('read_file', story_id=story.id) }}">
         <input type="hidden" id="id-field" name="id-field" value="{{ story.id }}" readonly>
         <label for="text-field">Story Name</label>
         <input type="text" id="text-field" name="text-field" value="{{ story.story_name }}" readonly>
-        <form method="POST">
-            <button type="submit" class="btn btn-outline-dark" name="read_content">Read Content</button>
-            <button type="submit" class="btn btn-outline-dark" name="pause_content">Pause Content</button>
-            <button type="submit" class="btn btn-outline-dark" name="resume_content">Resume Content</button>
-            <button type="submit" class="btn btn-outline-dark" name="stop_content">Stop Content</button>
-        </form>
+
+        <button type="submit" class="btn btn-outline-dark" name="read_content">Read Content</button>
+        <button type="submit" class="btn btn-outline-dark" name="pause_content">Pause Content</button>
+        <button type="submit" class="btn btn-outline-dark" name="resume_content">Resume Content</button>
+        <button type="submit" class="btn btn-outline-dark" name="stop_content">Stop Content</button>
     </form>
 </div>
 
 <div class="text_area">
     <textarea rows="20" style="resize: vertical;">{{ story.content }}</textarea>
 </div>
-
 
 
 

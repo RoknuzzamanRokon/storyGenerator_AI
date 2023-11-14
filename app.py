@@ -237,31 +237,30 @@ def voiceTest_and_download(story_id):
         return render_template('story_not_found.html')
 
 
-# import pygame
-# @app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
-# def read_file(story_id):
-#     session = db.session
-#     story = session.get(Story, story_id)
-#
-#     pygame.init()
-#     pygame.mixer.init()
-#     if story:
-#         if request.method == 'POST':
-#             pygame.mixer.music.load('new.mp3')
-#             while True:
-#                 if 'read_file' in request.form:
-#                     pygame.mixer.music.play()
-#                 elif 'pause_file' in request.form:
-#                     pygame.mixer.music.pause()
-#                 elif 'resume_file' in request.form:
-#                     pygame.mixer.music.unpause()
-#                 elif 'stop_file' in request.form:
-#                     pygame.mixer.music.stop()
-#                     break
-#         return render_template('view_file.html', story=story)
-#     else:
-#         return render_template('story_not_found.html')
+import pygame
+@app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
+def read_file(story_id):
+    session = db.session
+    story = session.get(Story, story_id)
 
+    pygame.init()
+    pygame.mixer.init()
+
+    if story:
+        if request.method == 'POST':
+            pygame.mixer.music.load('Mp3/Soleman_8.mp3')
+            if 'read_content' in request.form:
+                pygame.mixer.music.play()
+            elif 'pause_content' in request.form:
+                pygame.mixer.music.pause()
+            elif 'resume_content' in request.form:
+                pygame.mixer.music.unpause()
+            elif 'stop_content' in request.form:
+                pygame.mixer.music.stop()
+
+        return render_template('read_content_file.html', story=story)
+    else:
+        return render_template('story_not_found.html')
 
 # Error handling section.
 @app.errorhandler(404)
