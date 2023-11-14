@@ -19,7 +19,7 @@ session = Session()
 
 is_speaking = False
 
-EXPECTATION_WORDS = '700'
+EXPECTATION_WORDS = '150'
 
 
 class Story(db.Model):
