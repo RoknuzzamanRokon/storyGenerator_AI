@@ -4,3 +4,6 @@ host = db-mysql-storytelleraibot-do-user-15094185-0.c.db.ondigitalocean.com
 port = 25060
 database = defaultdb
 sslmode = REQUIRED
+
+
+mysql -u doadmin -pAVNS_jHAEmqkzyl-Pj0tKSkG -h db-mysql-storytelleraibot-do-user-15094185-0.c.db.ondigitalocean.com -P 25060 < 
