@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+t<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,7 +11,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
         body {
-            background-color: #f2f2f2;
+          
             font-family: Arial, sans-serif;
             display: flex;
             /* Use flexbox for layout */
@@ -28,7 +28,7 @@
             border-radius: 5px;
             box-shadow: 0px 0px 10px grey;
             padding: 20px;
-            width: 50%;
+           
             /* Adjust the width as needed */
         }
 
@@ -67,13 +67,12 @@
         }
 
         .text_area {
-            flex: 1;
             padding: 20px;
         }
 
         textarea {
-            resize: vertical;
-            border-radius: 3px;
+            width:100%;
+            height:500px;
             border: 1px solid #ccc;
             padding: 10px;
         }
@@ -84,7 +83,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <div class="form">
+                
                     <form method="POST" action="/generate">
                         <label for="input-story-name">Story name</label>
                         <input type="text" id="input-story-name" name="input-story-name" value="{{ user_question }}" readonly>
@@ -102,17 +101,17 @@
                             <button type="submit" class="btn btn-outline-dark" name="View_list">View List</button>
                         </form>
                     </div>
-                </div>
+                
             </div>
 
             <div class="col-md-8">
-                <div class="text_area">
-                    <textarea rows="20" style="resize: vertical;">
+              
+                    <textarea>
                         {% if result %}
                   {{ result }}    
                     {% endif %}
                     </textarea>
-                </div>
+               
 
             </div>
         </div>
