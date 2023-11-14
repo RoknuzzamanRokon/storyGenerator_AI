@@ -1,0 +1,6 @@
+username = doadmin
+password = AVNS_jHAEmqkzyl-Pj0tKSkG
+host = db-mysql-storytelleraibot-do-user-15094185-0.c.db.ondigitalocean.com
+port = 25060
+database = defaultdb
+sslmode = REQUIRED
