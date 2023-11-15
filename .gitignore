@@ -7,6 +7,8 @@ venv/
 pygame_test.py
 secret_key.txt
 
+venv
+
 <<<<<<< HEAD
 secret_key.txt
 
