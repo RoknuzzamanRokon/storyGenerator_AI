@@ -174,7 +174,7 @@
         // Listen for 'update_gpt_result' event from the server
         socket.on('update_gpt_result', function(data) {
             // Display the received gpt_result in the resultContainer
-            resultContainer.innerHTML += data.result + '<br>';
+            resultContainer.innerHTML += data.chapter + data.result + '\n\n\n';
         });
     </script>
 

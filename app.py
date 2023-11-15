@@ -40,7 +40,7 @@ session = Session()
 
 is_speaking = False
 
-EXPECTATION_WORDS = '50'
+EXPECTATION_WORDS = '500'
 
 class Story(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -104,7 +104,23 @@ def generate_story():
                     print(chapter_explanations)
                     for i in range(1, len(dictionary) + 1):
                         per_chapter = dictionary[i]
+                        # print(per_chapter)
+                        
+                        # socketio.emit('update_gpt_result', 
+                        #               {'chapter' : per_chapter})
+                        
+                        chapter_heading = f"chapter-{i}-{per_chapter} \n"
+                        
                         chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
+                        
+                        # chapter_heading = chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
+                        
+                        # print(chapter_heading)
+                        
+                        
+                        # socketio.emit('update_gpt_result', 
+                        #               {'chapter' : chapter_heading})
+                        
                         language_field_2 = "Write it to " + language + " language"
                         result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + language_field_2
                         print(result)
@@ -115,10 +131,13 @@ def generate_story():
                         gpt_result = test_model_02.choices[0].message.content
                         print(gpt_result)
                         
-                        socketio.emit('update_gpt_result', 
-                                      {'result': gpt_result})
-                        
                         chapter_explanations.append(f"{gpt_result}\n\n\n")
+                        
+                        socketio.emit('update_gpt_result', 
+                                      {'chapter' : chapter_heading,
+                                       'result' : gpt_result})
+                        
+                        
                     chapter_str = "\n".join(chapter_explanations)
 
                     return render_template('generate.html', result=chapter_str,
