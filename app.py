@@ -8,6 +8,7 @@ import openai
 import os
 import elevenlabs
 
+
 app = Flask(__name__, template_folder='templates')
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aistorywritter'
@@ -19,7 +20,7 @@ session = Session()
 
 is_speaking = False
 
-EXPECTATION_WORDS = '300'
+EXPECTATION_WORDS = '799'
 
 
 class Story(db.Model):
