@@ -20,7 +20,11 @@ session = Session()
 
 is_speaking = False
 
+<<<<<<< HEAD
 EXPECTATION_WORDS = '750'
+=======
+EXPECTATION_WORDS = '70'
+>>>>>>> e75a885a96b311c047461d9fb82cc253d83f87d0
 
 class Story(db.Model):
     id = db.Column(db.Integer, primary_key=True)
