@@ -155,18 +155,30 @@
             </div>
 
             <div class="col-md-6">
-                <div class="text_area">
-                    <textarea rows="20" style="resize: vertical;" disabled>
-                    {% if result %}
-                 <p style="font-family: 'Courier New', Courier, monospace;">
-                     {{ result }}
-                 </p>
-                {% endif %}
-                </textarea>
-                </div>
-            </div>
+    <div class="text_area">
+        <textarea id="result-container" rows="20" style="resize: vertical;" disabled></textarea>
+    </div>
+</div>
         </div>
     </div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const resultContainer = document.getElementById('result-container');
+
+        // Connect to the Socket.IO server
+        const socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Listen for 'update_gpt_result' event from the server
+        socket.on('update_gpt_result', function(data) {
+            // Display the received gpt_result in the resultContainer
+            resultContainer.innerHTML += data.chapter + data.result + '\n\n\n';
+        });
+    </script>
+
+
 
 </body>
 

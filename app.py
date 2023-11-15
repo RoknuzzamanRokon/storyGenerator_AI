@@ -1,15 +1,32 @@
 from datetime import datetime
 import os
+import time
 from sqlalchemy.orm import Session
 from flask_migrate import Migrate
-from flask import Flask, render_template, request, send_file, redirect
+from flask import Flask, render_template, request, send_file, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO, emit
 # from mysql import connector
 import openai
 import elevenlabs
 import pygame
 
+
+
+
+
+
+
+
+
+
+
+
 app = Flask(__name__, template_folder='templates')
+app.config['SECRET_KEY'] = "secret"
+socketio = SocketIO(app=app)
+
+
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aistorywritter'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost/storyGenText'
@@ -18,13 +35,20 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db=db)
 session = Session()
 
+
+
+
 is_speaking = False
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 EXPECTATION_WORDS = '750'
 =======
 EXPECTATION_WORDS = '70'
 >>>>>>> e75a885a96b311c047461d9fb82cc253d83f87d0
+=======
+EXPECTATION_WORDS = '500'
+>>>>>>> socketio
 
 class Story(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,6 +78,7 @@ chapter_str = ""
 @app.route("/")
 def home():
     return render_template('index.html')
+
 
 
 @app.route('/generate', methods=['POST', 'GET'])
@@ -87,7 +112,23 @@ def generate_story():
                     print(chapter_explanations)
                     for i in range(1, len(dictionary) + 1):
                         per_chapter = dictionary[i]
+                        # print(per_chapter)
+                        
+                        # socketio.emit('update_gpt_result', 
+                        #               {'chapter' : per_chapter})
+                        
+                        chapter_heading = f"chapter-{i}-{per_chapter} \n"
+                        
                         chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
+                        
+                        # chapter_heading = chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
+                        
+                        # print(chapter_heading)
+                        
+                        
+                        # socketio.emit('update_gpt_result', 
+                        #               {'chapter' : chapter_heading})
+                        
                         language_field_2 = "Write it to " + language + " language"
                         result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + language_field_2
                         print(result)
@@ -97,7 +138,14 @@ def generate_story():
                         )
                         gpt_result = test_model_02.choices[0].message.content
                         print(gpt_result)
+                        
                         chapter_explanations.append(f"{gpt_result}\n\n\n")
+                        
+                        socketio.emit('update_gpt_result', 
+                                      {'chapter' : chapter_heading,
+                                       'result' : gpt_result})
+                        
+                        
                     chapter_str = "\n".join(chapter_explanations)
 
                     return render_template('generate.html', result=chapter_str,
@@ -133,6 +181,23 @@ def generate_story():
             else:
                 return 'Content not available'
     return render_template('index.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route('/view_list', methods=['GET'])
@@ -295,4 +360,5 @@ def internal_server_error(e):
 
 
 if __name__ == "__main__":
+    socketio.run(app, debug=True)
     app.run(debug=True)
