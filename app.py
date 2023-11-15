@@ -40,7 +40,7 @@ session = Session()
 
 is_speaking = False
 
-EXPECTATION_WORDS = '750'
+EXPECTATION_WORDS = '50'
 
 class Story(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,14 +70,6 @@ chapter_str = ""
 @app.route("/")
 def home():
     return render_template('index.html')
-
-
-
-
-
-
-
-
 
 
 
@@ -122,6 +114,10 @@ def generate_story():
                         )
                         gpt_result = test_model_02.choices[0].message.content
                         print(gpt_result)
+                        
+                        socketio.emit('update_gpt_result', 
+                                      {'result': gpt_result})
+                        
                         chapter_explanations.append(f"{gpt_result}\n\n\n")
                     chapter_str = "\n".join(chapter_explanations)
 
