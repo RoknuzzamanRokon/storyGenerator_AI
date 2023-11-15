@@ -1,15 +1,32 @@
 from datetime import datetime
 import os
+import time
 from sqlalchemy.orm import Session
 from flask_migrate import Migrate
-from flask import Flask, render_template, request, send_file, redirect
+from flask import Flask, render_template, request, send_file, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO, emit
 # from mysql import connector
 import openai
 import elevenlabs
 import pygame
 
+
+
+
+
+
+
+
+
+
+
+
 app = Flask(__name__, template_folder='templates')
+app.config['SECRET_KEY'] = "secret"
+socketio = SocketIO(app=app)
+
+
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aistorywritter'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost/storyGenText'
@@ -17,6 +34,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 migrate = Migrate(app, db=db)
 session = Session()
+
+
+
 
 is_speaking = False
 
@@ -50,6 +70,15 @@ chapter_str = ""
 @app.route("/")
 def home():
     return render_template('index.html')
+
+
+
+
+
+
+
+
+
 
 
 @app.route('/generate', methods=['POST', 'GET'])
@@ -129,6 +158,23 @@ def generate_story():
             else:
                 return 'Content not available'
     return render_template('index.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route('/view_list', methods=['GET'])
@@ -291,4 +337,5 @@ def internal_server_error(e):
 
 
 if __name__ == "__main__":
+    socketio.run(app, debug=True)
     app.run(debug=True)
