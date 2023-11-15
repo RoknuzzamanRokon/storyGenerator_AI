@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, send_file, redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.orm import Session
 # from mysql import connector
