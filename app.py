@@ -1,14 +1,13 @@
+from datetime import datetime
+import os
+from sqlalchemy.orm import Session
+from flask_migrate import Migrate
 from flask import Flask, render_template, request, send_file, redirect
 from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from sqlalchemy.orm import Session
 # from mysql import connector
-from datetime import datetime
 import openai
-import os
 import elevenlabs
-
+import pygame
 
 app = Flask(__name__, template_folder='templates')
 
@@ -21,7 +20,7 @@ session = Session()
 
 is_speaking = False
 
-EXPECTATION_WORDS = '250'
+EXPECTATION_WORDS = '750'
 
 class Story(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -66,14 +65,15 @@ def generate_story():
             chapter = request.form.get('chapter-field')
             language = request.form.get('language-field')
 
-            language_field = "Generate it to " + language + " langauge."
+            language_field = "Generate it to " + language + " language."
             user_result = (
                     "Create a dictionary.where key=1,value=string.string values is chapter. This are " + chapter +
                     " chapters heading for " + user_question + "." )
-            test_model_01 = openai.chat.completions.create(model="gpt-3.5-turbo",
-                                                         messages=[{"role": "user",
-                                                                    "content": user_result}]
-                                                           )
+            test_model_01 = openai.chat.completions.create(
+                                                model="gpt-3.5-turbo",
+                                                messages=[{"role": "user",
+                                                        "content": user_result}]
+                                                                            )
             result_of_title = test_model_01.choices[0].message.content
             print(result_of_title)
             try:
@@ -84,7 +84,7 @@ def generate_story():
                     for i in range(1, len(dictionary) + 1):
                         per_chapter = dictionary[i]
                         chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
-                        language_field_2 = "Write it to " + language + " langauge"
+                        language_field_2 = "Write it to " + language + " language"
                         result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + language_field_2
                         print(result)
                         test_model_02 = openai.chat.completions.create(
@@ -160,6 +160,9 @@ def view_test_file(story_id):
 
 @app.route('/delete_file/<int:story_id>', methods=['GET', 'POST'])
 def delete_file(story_id):
+    """
+        This is delete methods.
+    """
     if request.method == 'POST':
         file_delete = Story.query.get_or_404(story_id)
 
@@ -176,6 +179,9 @@ def delete_file(story_id):
 
 @app.route('/update_file/<int:story_id>', methods=['POST','GET'])
 def update_file(story_id):
+    """
+        This is update route.
+    """
     session = db.session
     story = session.get(Story, story_id)
     if story:
@@ -185,6 +191,7 @@ def update_file(story_id):
 
 @app.route('/update_story_name/<int:story_id>', methods=['GET', 'POST'])
 def update_story_name(story_id):
+    """Update story name."""
     stories = Story.query.all()
     session = db.session
     story = session.get(Story, story_id)
@@ -202,6 +209,7 @@ def update_story_name(story_id):
 
 @app.route('/voiceTest_and_download/<int:story_id>', methods=['GET', 'POST'])
 def voiceTest_and_download(story_id):
+    """Check voice and download mp3 file."""
     global is_speaking  # Access the global variable
     is_speaking = False
     choice_voice = request.form.get('choice_voice')
@@ -209,6 +217,7 @@ def voiceTest_and_download(story_id):
     session = db.session
     story = session.get(Story, story_id)
     if story:
+        
         if 'listen_voice' in request.form:
             audio = elevenlabs.generate(text=story.content[10:150],
                                         voice=choice_voice,
@@ -242,13 +251,12 @@ def voiceTest_and_download(story_id):
         return render_template('story_not_found.html')
 
 
-import pygame
+
 @app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
 def read_file(story_id):
+    """read file content."""
     session = db.session
     story = session.get(Story, story_id)
-
-    pygame.init()
     pygame.mixer.init()
 
     if story:
@@ -271,12 +279,14 @@ def read_file(story_id):
 # Error handling section.
 @app.errorhandler(404)
 def not_found(e):
+    """Its handel 404 error"""
     print(e)
     return render_template('404.html'), 404
 
 
 @app.errorhandler(500)
 def internal_server_error(e):
+    """Its handel 500 error message."""
     return render_template('500.html'), 500
 
 
