@@ -40,13 +40,13 @@ class Story(db.Model):
     def __repr__(self) -> str:
         return f'{self.id}-{self.story_name}'
 
-# API_KEY_1 = os.environ['secret_key']
-API_KEY_1 = open("secret_key.txt", "r").read()
+API_KEY_1 = os.environ['secret_key']
+# API_KEY_1 = open("secret_key.txt", "r").read()
 openai.api_key = API_KEY_1
 
 
-# API_KEY_2 = os.environ['elevenLabs_key']
-API_KEY_2 = open('elevenLabs_key.txt', 'r').read()
+API_KEY_2 = os.environ['elevenLabs_key']
+# API_KEY_2 = open('elevenLabs_key.txt', 'r').read()
 elevenlabs.set_api_key(API_KEY_2)
 
 
