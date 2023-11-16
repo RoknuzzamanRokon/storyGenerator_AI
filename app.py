@@ -1,11 +1,10 @@
 from datetime import datetime
 import os
-import time
 from sqlalchemy.orm import Session
 from flask_migrate import Migrate
-from flask import Flask, render_template, request, send_file, redirect, jsonify
+from flask import Flask, render_template, request, send_file, redirect
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 # from mysql import connector
 import openai
 import elevenlabs
