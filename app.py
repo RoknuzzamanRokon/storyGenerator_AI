@@ -24,7 +24,7 @@ migrate = Migrate(app, db=db)
 session = Session()
 
 
-EXPECTATION_WORDS = '500'
+EXPECTATION_WORDS = '499'
 
 
 class Story(db.Model):
@@ -102,7 +102,7 @@ def generate_story():
                         
                         chapter_heading = f"chapter-{i}-{per_chapter} \n"
                         
-                        chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
+                        chapter_explanations.append(f"Chapter-{i}-{per_chapter} \n")
                         
                         # chapter_heading = chapter_explanations.append(f"chapter-{i}-{per_chapter} \n")
                         
@@ -120,7 +120,7 @@ def generate_story():
                             messages=[{"role": "user", "content": result}]
                         )
                         gpt_result = test_model_02.choices[0].message.content
-                        print(gpt_result)
+                        # print(gpt_result)
                         
                         chapter_explanations.append(f"{gpt_result}\n\n\n")
                         
@@ -330,7 +330,7 @@ def internal_server_error(e):
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
-    app.run(debug=True)
+    
 
 
 
