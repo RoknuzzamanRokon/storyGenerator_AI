@@ -12,20 +12,9 @@ import elevenlabs
 import pygame
 
 
-
-
-
-
-
-
-
-
-
-
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = "secret"
 socketio = SocketIO(app=app)
-
 
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aistorywritter'
@@ -36,19 +25,8 @@ migrate = Migrate(app, db=db)
 session = Session()
 
 
-
-
-is_speaking = False
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-EXPECTATION_WORDS = '750'
-=======
-EXPECTATION_WORDS = '70'
->>>>>>> e75a885a96b311c047461d9fb82cc253d83f87d0
-=======
 EXPECTATION_WORDS = '500'
->>>>>>> socketio
+
 
 class Story(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -67,12 +45,17 @@ class Story(db.Model):
 API_KEY_1 = open("secret_key.txt", "r").read()
 openai.api_key = API_KEY_1
 
+
 # API_KEY_2 = os.environ['elevenLabs_key']
 API_KEY_2 = open('elevenLabs_key.txt', 'r').read()
 elevenlabs.set_api_key(API_KEY_2)
 
+
+is_speaking = False
+
 # Initialize chapter_str as an empty string
 chapter_str = ""
+
 
 
 @app.route("/")
@@ -83,6 +66,7 @@ def home():
 
 @app.route('/generate', methods=['POST', 'GET'])
 def generate_story():
+    """This is main function in storytailler app"""
     global chapter_str
     user_question = ""
     story = None
@@ -186,36 +170,16 @@ def generate_story():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/view_list', methods=['GET'])
 def view_list():
     stories = Story.query.all()
     return render_template('view_list.html', stories=stories)
 
 
-# @app.route('/view_file/<int:story_id>', methods=['GET'])
-# def view_file(story_id):
-#     session = db.session
-#     story = session.get(Story, story_id)
-#     if story:
-#         return render_template('view_file.html', story=story)
-#     return "Story not found."
 
 @app.route('/view_test_file/<int:story_id>', methods=['GET'])
 def view_test_file(story_id):
+    """This function list all file."""
     session = db.session
     story = session.get(Story, story_id)
     if story:
@@ -225,6 +189,7 @@ def view_test_file(story_id):
         else:
             return render_template('voiceTest_and_download.html', story=story)
     return "Story not found."
+
 
 
 @app.route('/delete_file/<int:story_id>', methods=['GET', 'POST'])
@@ -244,6 +209,7 @@ def delete_file(story_id):
 
     # Handle GET requests for displaying the form or other actions here
     return "GET request for deleting a file"
+
 
 
 @app.route('/update_file/<int:story_id>', methods=['POST','GET'])
@@ -274,6 +240,8 @@ def update_story_name(story_id):
         else:
             return "Update content cannot be empty"
     return "Invalid update request"
+
+
 
 
 @app.route('/voiceTest_and_download/<int:story_id>', methods=['GET', 'POST'])
@@ -321,6 +289,8 @@ def voiceTest_and_download(story_id):
 
 
 
+
+
 @app.route('/view_file/<int:story_id>', methods=['GET', 'POST'])
 def read_file(story_id):
     """read file content."""
@@ -362,3 +332,8 @@ def internal_server_error(e):
 if __name__ == "__main__":
     socketio.run(app, debug=True)
     app.run(debug=True)
+
+
+
+
+
