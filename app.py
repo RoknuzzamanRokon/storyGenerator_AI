@@ -9,6 +9,8 @@ from flask_socketio import SocketIO
 import openai
 import elevenlabs
 import pygame
+import requests
+import json
 
 
 app = Flask(__name__, template_folder='templates')
@@ -40,13 +42,16 @@ class Story(db.Model):
     def __repr__(self) -> str:
         return f'{self.id}-{self.story_name}'
 
-API_KEY_1 = os.environ['secret_key']
-# API_KEY_1 = open("secret_key.txt", "r").read()
+
+api_url = 'https://api.openai.com/v1/chat/completions'
+
+# API_KEY_1 = os.environ['secret_key']
+API_KEY_1 = open("secret_key.txt", "r").read()
 openai.api_key = API_KEY_1
 
 
-API_KEY_2 = os.environ['elevenLabs_key']
-# API_KEY_2 = open('elevenLabs_key.txt', 'r').read()
+# API_KEY_2 = os.environ['elevenLabs_key']
+API_KEY_2 = open('elevenLabs_key.txt', 'r').read()
 elevenlabs.set_api_key(API_KEY_2)
 
 
@@ -81,13 +86,44 @@ def generate_story():
             user_result = (
                     "Create a dictionary.where key=1,value=string.string values is chapter. This are " + chapter +
                     " chapters heading for " + user_question + "." )
-            test_model_01 = openai.chat.completions.create(
-                                                model="gpt-3.5-turbo",
-                                                messages=[{"role": "user",
-                                                        "content": user_result}]
-                                                                            )
-            result_of_title = test_model_01.choices[0].message.content
-            print(result_of_title)
+            # test_model_01 = openai.chat.completions.create(
+            #                                     model="gpt-3.5-turbo",
+            #                                     messages=[{"role": "user",
+            #                                             "content": user_result}]
+            #                                                                 )
+            
+            payload_1 = {"model" : "gpt-3.5-turbo",
+                                "messages" : [{"role": "user", "content": user_result}],
+                                "temperature": 0.1,
+                                "top_p": 1.0,
+                                "stream": False,
+                                "presence_penalty" : 0,
+                                "frequency_penalty" : 0,
+                            }
+                                    
+            headers_1 = {
+                        "Content_Type" : "application/json",
+                        "Authorization" : f"Bearer {openai.api_key}"
+                    }
+                        
+            response_1 = requests.post(url=api_url, headers=headers_1, json=payload_1, stream=False)
+
+            # Check if the request was successful (status code 200)
+            if response_1.status_code == 200:
+                try:
+                    data = json.loads(response_1.content)
+
+                    # Extract the content from the first choice only
+                    result_of_title = data['choices'][0]['message']['content']
+
+                    print(result_of_title)
+
+                except json.decoder.JSONDecodeError:
+                    # Handle the case where the response is not valid JSON
+                    print("Error: Invalid JSON response")
+                    print("Response Content:", response_1.text)
+            
+                
             try:
                 dictionary = eval(result_of_title)
                 if isinstance(dictionary, dict):
@@ -115,12 +151,36 @@ def generate_story():
                         language_field_2 = "Write it to " + language + " language"
                         result = per_chapter + " explain it in " + EXPECTATION_WORDS + " words. " + language_field_2
                         print(result)
-                        test_model_02 = openai.chat.completions.create(
-                            model="gpt-4",
-                            messages=[{"role": "user", "content": result}]
-                        )
-                        gpt_result = test_model_02.choices[0].message.content
-                        # print(gpt_result)
+                        
+                        # test_model_02 = openai.chat.completions.create(
+                        #     model="gpt-4",
+                        #     messages=[{"role": "user", "content": result}]
+                        # )
+                        
+                        payload_2 = {
+                                "model" : "gpt-4",
+                                "messages" : [{"role": "user", "content": result}],
+                                "temperature": 0.1,
+                                "top_p": 1.0,
+                                "stream": False,
+                                "presence_penalty" : 0,
+                                "frequency_penalty" : 0,
+                            }
+                        
+                        headers_2 = {
+                                "Content_Type" : "application/json",
+                                "Authorization" : f"Bearer {openai.api_key}"
+                            }
+                        
+                        response_2 = requests.post(url=api_url, headers=headers_2, json=payload_2, stream=False)
+                        
+                        data_2 = json.loads(response_2.content)
+                        
+                        gpt_result = data_2['choices'][0]['message']['content']
+  
+                        
+                        # gpt_result = test_model_02.choices[0].message.content
+                        print(gpt_result)
                         
                         chapter_explanations.append(f"{gpt_result}\n\n\n")
                         
@@ -193,8 +253,7 @@ def view_test_file(story_id):
 
 @app.route('/delete_file/<int:story_id>', methods=['GET', 'POST'])
 def delete_file(story_id):
-    """
-        This is delete methods.
+    """This is delete methods.
     """
     if request.method == 'POST':
         file_delete = Story.query.get_or_404(story_id)
@@ -239,7 +298,6 @@ def update_story_name(story_id):
         else:
             return "Update content cannot be empty"
     return "Invalid update request"
-
 
 
 
