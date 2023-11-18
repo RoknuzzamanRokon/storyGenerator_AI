@@ -45,7 +45,6 @@ pydantic_core==2.10.1
 pydub==0.25.1
 pygame==2.5.2
 Pygments==2.16.1
-pypiwin32==223
 python-engineio==4.8.0
 python-socketio==5.10.0
 pyttsx3==2.90
