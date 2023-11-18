@@ -17,7 +17,6 @@ monkey.patch_all()
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = "secret"
-sio = socketio.AsyncServer(async_mode='aiohttp')
 socketio = SocketIO(app=app)
 
 
