@@ -19,5 +19,12 @@ elevenLabs.py
 
 test
 
+<<<<<<< HEAD
 openai.py
 __pycache__
+=======
+
+openai.py
+
+__pycache__
+>>>>>>> openai
