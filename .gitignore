@@ -18,3 +18,6 @@ elevenLabs.py
 
 
 test
+
+openai.py
+__pycache__
