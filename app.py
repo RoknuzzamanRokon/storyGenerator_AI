@@ -11,9 +11,9 @@ import elevenlabs
 import pygame
 import requests
 import json
-from gevent import monkey
+# import httplib
 
-monkey.patch_all()
+# httplib._is_legal_header_name = re.compile(r':|\A[^:\s][^:\r\n]*\Z').match
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = "secret"
@@ -315,9 +315,9 @@ def voiceTest_and_download(story_id):
     if story:
         
         if 'listen_voice' in request.form:
-            audio = elevenlabs.generate(text=story.content[10:150],
+            audio = elevenlabs.generate(text=story.content[14:150],
                                         voice=choice_voice,
-                                        model=choice_model)
+                                        model="eleven_multilingual_v2")
             elevenlabs.play(audio)
             return render_template('voiceTest_and_download.html', story=story)
 
